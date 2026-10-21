@@ -81,7 +81,9 @@ function sh(a){a=a.slice();for(var i=a.length;i>1;i--){var j=Math.floor(Math.ran
 function nm(s){return String(s).toLowerCase().replace(/[’‘]/g,"'").replace(/[.,!?]/g,'').replace(/\s+/g,' ').trim()}
 var S={snd:1,time:2700,score:0,combo:0,ok:0,tot:0,sk:{},miss:[],i:0,run:0,boss:0},ac;
 function beep(f,d){if(!S.snd)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();var o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.05;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
-function say(t){if(!S.snd)return;try{var u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+var VO=null;function pv(){try{var g=speechSynthesis.getVoices().filter(function(v){return /en[-_]GB/i.test(v.lang)});VO=g.filter(function(v){return /Daniel|UK English|Serena|Kate|Google/i.test(v.name)})[0]||g[0]||null}catch(e){}}
+try{pv();speechSynthesis.addEventListener('voiceschanged',pv)}catch(e){}
+function say(t){if(!S.snd)return;try{var u=new SpeechSynthesisUtterance(t);u.lang='en-GB';if(!VO)pv();if(VO)u.voice=VO;u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 
 /* ---------- DATA ---------- */
 var CH=[
